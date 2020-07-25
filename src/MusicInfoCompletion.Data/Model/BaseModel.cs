@@ -6,7 +6,7 @@ namespace MusicInfoCompletion.Data
     public class BaseModel
     {
         [Key]
-        public Guid Pk { get; set; }
+        public virtual Guid Pk { get; set; }
 
         public string AddedBy { get; set; }
 

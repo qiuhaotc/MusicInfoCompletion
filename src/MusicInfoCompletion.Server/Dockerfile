@@ -2,6 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT Production
 EXPOSE 80
 EXPOSE 443
 

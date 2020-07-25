@@ -11,7 +11,7 @@ namespace MusicInfoCompletion.Data
 
         public Guid SingerPk { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [MaxLength(1000)]
         public string Description { get; set; }

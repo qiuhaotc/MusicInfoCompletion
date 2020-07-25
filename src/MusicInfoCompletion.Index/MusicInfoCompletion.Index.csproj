@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>../bin</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../bin</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00011" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00011" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MusicInfoCompletion.Common\MusicInfoCompletion.Common.csproj" />
+    <ProjectReference Include="..\MusicInfoCompletion.Data\MusicInfoCompletion.Data.csproj" />
+  </ItemGroup>
+
+</Project>
