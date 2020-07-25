@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT Production
+ENV MusicConfiguration__IndexPath /luceneindex
 EXPOSE 80
 EXPOSE 443
 

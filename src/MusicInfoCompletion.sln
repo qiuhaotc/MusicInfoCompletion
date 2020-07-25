@@ -7,11 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Server"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Data", "MusicInfoCompletion.Data\MusicInfoCompletion.Data.csproj", "{64AAE205-2F0D-4BF3-A9FB-DBBD19F74EC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicInfoCompletion.Common", "MusicInfoCompletion.Common\MusicInfoCompletion.Common.csproj", "{B4E0D59A-2F77-495D-BCAE-BACB26DD6751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Common", "MusicInfoCompletion.Common\MusicInfoCompletion.Common.csproj", "{B4E0D59A-2F77-495D-BCAE-BACB26DD6751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicInfoCompletion.Index", "MusicInfoCompletion.Index\MusicInfoCompletion.Index.csproj", "{05C163A6-73DC-47B5-BFFF-FB2B7361B9E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Index", "MusicInfoCompletion.Index\MusicInfoCompletion.Index.csproj", "{05C163A6-73DC-47B5-BFFF-FB2B7361B9E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicInfoCompletion.Test", "MusicInfoCompletion.Test\MusicInfoCompletion.Test.csproj", "{6E817E43-D1F5-45C8-B383-31CDB77A3F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Test", "MusicInfoCompletion.Test\MusicInfoCompletion.Test.csproj", "{6E817E43-D1F5-45C8-B383-31CDB77A3F43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{A32444D3-5484-49D0-9CD5-C4BD049279F1}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
