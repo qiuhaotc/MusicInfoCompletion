@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{A32444D3-5
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicInfoCompletion.WindowsClient", "MusicInfoCompletion.WindowsClient\MusicInfoCompletion.WindowsClient.csproj", "{FA84A305-F92E-47CE-8504-21BE41F58CDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{6E817E43-D1F5-45C8-B383-31CDB77A3F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E817E43-D1F5-45C8-B383-31CDB77A3F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E817E43-D1F5-45C8-B383-31CDB77A3F43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA84A305-F92E-47CE-8504-21BE41F58CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA84A305-F92E-47CE-8504-21BE41F58CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA84A305-F92E-47CE-8504-21BE41F58CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA84A305-F92E-47CE-8504-21BE41F58CDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
