@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MusicInfoCompletion.Common;
 using MusicInfoCompletion.Data;
 using MusicInfoCompletion.Index;
@@ -82,8 +84,10 @@ namespace MusicInfoCompletion.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifeTime, IndexMaintainer maintainer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifeTime, IndexMaintainer maintainer, MusicConfiguration musicConfiguration, ILogger<Startup> logger)
         {
+            Logger = logger;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -113,22 +117,45 @@ namespace MusicInfoCompletion.Server
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            lifeTime.ApplicationStopping.Register(OnShutdown);
+            // on exit
+            // lifeTime.ApplicationStopping.Register(OnShutdown);
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
             Maintainer = maintainer;
+
             if (!Maintainer.IndexExist())
             {
-                Task.Run(async () => {
-                    await Maintainer.InitIndex(CancellationToken.None);
+                Task.Run(async () =>
+                {
+                    await Maintainer.InitIndex(CancellationTokenSource.Token);
                 });
             }
+
+            Task.Run(async () =>
+            {
+                while (!CancellationTokenSource.Token.IsCancellationRequested)
+                {
+                    Logger.LogInformation("Auto SaveResults start, will run after {AutoSaveIndexSeconds} seconds", musicConfiguration.AutoSaveIndexSeconds);
+                    await Task.Delay(musicConfiguration.AutoSaveIndexSeconds * 1000, CancellationTokenSource.Token);
+                    Logger.LogInformation("Auto SaveResults start");
+                    await Maintainer.SaveResults(CancellationTokenSource.Token);
+                    Logger.LogInformation("Auto SaveResults finished");
+                }
+            }, CancellationTokenSource.Token);
         }
 
-        IndexMaintainer Maintainer { get; set; }
-
-        void OnShutdown()
+        void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
+            Logger.LogInformation("Shutdown Dispose start");
+            CancellationTokenSource.Cancel();
             Maintainer?.Dispose();
+            CancellationTokenSource.Dispose();
+            Logger.LogInformation("Shutdown Dispose finished");
+            NLog.LogManager.Shutdown();
         }
+
+        CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource();
+        IndexMaintainer Maintainer { get; set; }
+        ILogger<Startup> Logger { get; set; }
     }
 }

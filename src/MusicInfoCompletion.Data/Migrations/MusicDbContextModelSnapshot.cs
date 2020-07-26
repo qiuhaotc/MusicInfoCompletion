@@ -47,9 +47,6 @@ namespace MusicInfoCompletion.Data.Migrations
                     b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("SingerPk")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("Title")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
                         .HasMaxLength(200);

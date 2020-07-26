@@ -47,6 +47,7 @@ namespace MusicInfoCompletion.Index
             {
                 System.IO.Directory.CreateDirectory(musicConfiguration.IndexPath);
                 LucenePool.BuildIndex(musicConfiguration.IndexPath, true, true, songDocuments.Select(u => u.GetDocument()), true);
+                LucenePool.SaveResults(musicConfiguration.IndexPath, false);
             }, cancellationToken);
 
             logger.LogInformation("Init index finished");
@@ -102,14 +103,14 @@ namespace MusicInfoCompletion.Index
             return exist;
         }
 
-        public async Task SaveResultsAndClearLucenePool(CancellationToken cancellationToken)
+        public async Task SaveResults(CancellationToken cancellationToken)
         {
-            logger.LogInformation("SaveResultsAndClearLucenePool start");
+            logger.LogInformation("SaveResults start");
             await Task.Run(() =>
             {
-                LucenePool.SaveResultsAndClearLucenePool(musicConfiguration.IndexPath);
+                LucenePool.SaveResults(musicConfiguration.IndexPath, true);
             }, cancellationToken);
-            logger.LogInformation("SaveResultsAndClearLucenePool successful");
+            logger.LogInformation("SaveResults successful");
         }
     }
 }

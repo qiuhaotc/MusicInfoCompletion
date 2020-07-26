@@ -22,9 +22,9 @@ namespace MusicInfoCompletion.Index
             var docuemnt = new SongDocument
             {
                 Album = song.Album?.Title,
-                Genre = string.Join(", ", song.GenreSongs?.Select(u => u.Genre?.Title) ?? Enumerable.Empty<string>()),
-                SingerAKANames = string.Join(", ", song.SingerSongs?.Select(u => u.Singer?.AKANames) ?? Enumerable.Empty<string>()),
-                SingerNames = string.Join(", ", song.SingerSongs?.Select(u => u.Singer?.Name) ?? Enumerable.Empty<string>()),
+                Genre = string.Join(Constants.Separater, song.GenreSongs?.Select(u => u.Genre?.Title) ?? Enumerable.Empty<string>()),
+                SingerAKANames = string.Join(Constants.Separater, song.SingerSongs?.Select(u => u.Singer?.AKANames) ?? Enumerable.Empty<string>()),
+                SingerNames = string.Join(Constants.Separater, song.SingerSongs?.Select(u => u.Singer?.Name) ?? Enumerable.Empty<string>()),
                 SongAKATitles = song.AKATitles.ToStringSafe(),
                 SongTitle = song.Title.ToStringSafe(),
                 SongPk = song.Pk.ToString(),
@@ -32,7 +32,7 @@ namespace MusicInfoCompletion.Index
                 AlbumDescription = song.Album?.Description,
                 Picture = song.Picture,
                 ReleaseDate = song.Album.ReleaseDate?.ToString(Constants.DateTimeFormat),
-                SingerDescription = string.Join(". ", song.SingerSongs?.Select(u => u.Singer?.Description) ?? Enumerable.Empty<string>()),
+                SingerDescription = string.Join(Constants.Separater, song.SingerSongs?.Select(u => u.Singer?.Description) ?? Enumerable.Empty<string>()),
             };
 
             return docuemnt;
@@ -56,6 +56,24 @@ namespace MusicInfoCompletion.Index
                 new StoredField(nameof(songDocument.ReleaseDate), songDocument.ReleaseDate),
                 new StoredField(nameof(songDocument.Picture), songDocument.Picture ?? Array.Empty<byte>()),
             };
+        }
+
+        internal static void SaveResults(string luceneIndex, bool forceCommitChanges)
+        {
+            ReadWriteLock.TryEnterWriteLock(Constants.ReadWriteLockTimeOutMilliseconds);
+
+            try
+            {
+                if ((forceCommitChanges || shouldCommitChanges) && IndexWritesPool.TryGetValue(luceneIndex, out var indexWriter))
+                {
+                    indexWriter.Commit();
+                    shouldCommitChanges = false;
+                }
+            }
+            finally
+            {
+                ReadWriteLock.ExitWriteLock();
+            }
         }
 
         internal static void SaveResultsAndClearLucenePool(string luceneIndex)
@@ -137,6 +155,7 @@ namespace MusicInfoCompletion.Index
                 }
 
                 IndexGotChanged.AddOrUpdate(luceneIndex, u => 0, (u, v) => v + 1);
+                shouldCommitChanges = true;
             }
             finally
             {
@@ -171,6 +190,7 @@ namespace MusicInfoCompletion.Index
                 indexWriter.DeleteDocuments(searchQueries);
 
                 IndexGotChanged.AddOrUpdate(luceneIndex, u => 0, (u, v) => v + 1);
+                shouldCommitChanges = true;
             }
             finally
             {
@@ -188,6 +208,7 @@ namespace MusicInfoCompletion.Index
                 indexWriter.DeleteDocuments(terms);
 
                 IndexGotChanged.AddOrUpdate(luceneIndex, u => 0, (u, v) => v + 1);
+                shouldCommitChanges = true;
             }
             finally
             {
@@ -205,6 +226,7 @@ namespace MusicInfoCompletion.Index
                 indexWriter.UpdateDocument(term, document);
 
                 IndexGotChanged.AddOrUpdate(luceneIndex, u => 0, (u, v) => v + 1);
+                shouldCommitChanges = true;
             }
             finally
             {
@@ -229,6 +251,8 @@ namespace MusicInfoCompletion.Index
                 ReadWriteLock.ExitReadLock();
             }
         }
+
+        static bool shouldCommitChanges = false;
 
         static readonly object syncLockForWriter = new object();
 
@@ -359,7 +383,7 @@ namespace MusicInfoCompletion.Index
                 SingerAKANames = doc.Document.Get(nameof(SongDocument.SingerAKANames)),
                 Score = doc.Score,
                 AlbumDescription = doc.Document.Get(nameof(SongDocument.AlbumDescription)),
-                Picture = doc.Document.GetField(nameof(SongDocument.Picture)).GetBinaryValue().Bytes,
+                Picture = doc.Document.GetBinaryValue(nameof(SongDocument.Picture)).Bytes,
                 ReleaseDate = doc.Document.Get(nameof(SongDocument.ReleaseDate)),
                 SingerDescription = doc.Document.Get(nameof(SongDocument.SingerDescription)),
                 SongTitle = doc.Document.Get(nameof(SongDocument.SongTitle)),

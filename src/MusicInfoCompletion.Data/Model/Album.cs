@@ -9,8 +9,6 @@ namespace MusicInfoCompletion.Data
         [MaxLength(200)]
         public string Title { get; set; }
 
-        public Guid SingerPk { get; set; }
-
         public DateTime? ReleaseDate { get; set; }
 
         [MaxLength(1000)]

@@ -20,7 +20,6 @@ namespace MusicInfoCompletion.Data.Migrations
                     LastModifyDate = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Title = table.Column<string>(maxLength: 200, nullable: true),
-                    SingerPk = table.Column<Guid>(nullable: false),
                     ReleaseDate = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 1000, nullable: true)
                 },

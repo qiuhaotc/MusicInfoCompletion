@@ -10,7 +10,7 @@ using MusicInfoCompletion.Data;
 namespace MusicInfoCompletion.Data.Migrations
 {
     [DbContext(typeof(MusicDbContext))]
-    [Migration("20200725085906_Init")]
+    [Migration("20200726011832_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,9 +48,6 @@ namespace MusicInfoCompletion.Data.Migrations
 
                     b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("SingerPk")
-                        .HasColumnType("char(36)");
 
                     b.Property<string>("Title")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")

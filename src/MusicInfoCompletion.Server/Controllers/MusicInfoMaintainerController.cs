@@ -103,7 +103,7 @@ namespace MusicInfoCompletion.Server.Controllers
         [HttpGet]
         public async Task<MaintainMusicInfoResult> SaveSongIndex()
         {
-            await IndexMaintainer.SaveResultsAndClearLucenePool(CancellationToken.None);
+            await IndexMaintainer.SaveResults(CancellationToken.None);
 
             return new MaintainMusicInfoResult
             {
