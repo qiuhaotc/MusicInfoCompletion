@@ -1,4 +1,4 @@
-# MusicInfoCompletion
+# Music Info Completion
 
 Completion the music information via existing information
 
