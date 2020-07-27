@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Analysis.Util;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers.Classic;
@@ -137,7 +138,7 @@ namespace MusicInfoCompletion.Index
 
         public static Analyzer GetAnalyzer()
         {
-            return new StandardAnalyzer(Constants.AppLuceneVersion); // TODO: Implement SmartChineseAnalyzer, app exit with no error, don't know why
+            return new StandardAnalyzer(Constants.AppLuceneVersion, CharArraySet.EMPTY_SET); // TODO: Implement SmartChineseAnalyzer, app exit with no error, don't know why
         }
 
         internal static void BuildIndex(string luceneIndex, bool triggerMerge, bool applyAllDeletes, IEnumerable<Document> documents, bool needFlush)

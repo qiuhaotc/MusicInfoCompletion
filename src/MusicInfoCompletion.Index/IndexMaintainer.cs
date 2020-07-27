@@ -43,6 +43,8 @@ namespace MusicInfoCompletion.Index
                 }
             }
 
+            logger.LogInformation("Init index for {0} documents", songDocuments.Count);
+
             await Task.Run(() =>
             {
                 System.IO.Directory.CreateDirectory(musicConfiguration.IndexPath);

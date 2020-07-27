@@ -116,6 +116,7 @@ namespace MusicInfoCompletion.Server.Controllers
         {
             await IndexMaintainer.DeleteAllIndex(CancellationToken.None);
             await IndexMaintainer.InitIndex(CancellationToken.None);
+            await IndexMaintainer.SaveResults(CancellationToken.None);
 
             return new MaintainMusicInfoResult
             {
