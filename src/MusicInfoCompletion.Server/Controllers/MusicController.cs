@@ -1,4 +1,5 @@
-﻿using Lucene.Net.QueryParsers.Classic;
+﻿using System;
+using Lucene.Net.QueryParsers.Classic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicInfoCompletion.Common;
@@ -23,16 +24,27 @@ namespace MusicInfoCompletion.Server.Controllers
         [HttpPost]
         public SearchResult GetSongInfo(string searchQuery)
         {
-            logger.LogDebug("GetSongInfo start, use search query: {query}", searchQuery);
-
-            var query = QueryParser.Parse(searchQuery);
-            var songs = LucenePool.SearchSongs(musicConfiguration.IndexPath, query, 100);
             var result = new SearchResult
             {
-                SongInfos = songs
+                ResultCode = ResultCode.Successful
             };
 
-            logger.LogDebug("GetSongInfo ended, use search query: {query}, find {Length} results", searchQuery, songs.Length);
+            try
+            {
+                logger.LogDebug("GetSongInfo start, use search query: {query}", searchQuery);
+
+                var query = QueryParser.Parse(searchQuery);
+                var songs = LucenePool.SearchSongs(musicConfiguration.IndexPath, query, 10);
+                result.SongInfos = songs;
+
+                logger.LogDebug("GetSongInfo ended, use search query: {query}, find {Length} results", searchQuery, songs.Length);
+            }
+            catch (Exception ex)
+            {
+                result.ResultCode = ResultCode.Exception;
+                result.ExtraMessage = "Error occur";
+                logger.LogError(ex, "GetSongInfo Error Occur");
+            }
 
             return result;
         }
