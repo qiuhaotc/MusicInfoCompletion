@@ -17,6 +17,19 @@
   <ItemGroup>
     <PackageReference Include="Panuon.UI.Silver" Version="2.0.0.9-alpha" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.4.17" />
+    <PackageReference Include="TagLibSharp" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MusicFile.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MusicFile.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

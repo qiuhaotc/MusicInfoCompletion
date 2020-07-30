@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,19 +16,25 @@ using ReactiveUI;
 namespace MusicInfoCompletion.WindowsClient
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// MusicFile.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : ReactiveWindow<MainViewModel>
+    public partial class MusicFiles : ReactiveUserControl<MusicFilesViewModel>
     {
-        public MainWindow()
+        public MusicFiles()
         {
-            ViewModel = new MainViewModel();
+            InitializeComponent();
+            ViewModel = new MusicFilesViewModel();
 
             this.WhenActivated(disposableRegistration =>
             {
+                this.Bind(ViewModel,
+                    viewModel => viewModel.MusicPath,
+                    view => view.MusicPath.Text)
+                 .DisposeWith(disposableRegistration);
+
                 this.OneWayBind(ViewModel,
-                 viewModel => viewModel.MusicFilesViewModel,
-                 view => view.MainContent.DataContext)
+                viewModel => viewModel.MusicFiles,
+                view => view.MusicFilesList.ItemsSource)
                  .DisposeWith(disposableRegistration);
             });
         }
