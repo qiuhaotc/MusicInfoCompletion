@@ -1,0 +1,491 @@
+﻿{
+  "x-generator": "NSwag v13.6.2.0 (NJsonSchema v10.1.23.0 (Newtonsoft.Json v12.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "Music Server API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:5001",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "text/plain",
+    "application/json",
+    "text/json"
+  ],
+  "paths": {
+    "/api/v1/Music/GetSongInfo": {
+      "post": {
+        "tags": [
+          "Music"
+        ],
+        "operationId": "Music_GetSongInfo",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "searchQuery",
+            "in": "query",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SingleSearchResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/Music/GetSongInfos": {
+      "post": {
+        "tags": [
+          "Music"
+        ],
+        "operationId": "Music_GetSongInfos",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "searchRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BatchSearchRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BatchSearchResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/MusicInfoMaintainer/AddSong": {
+      "post": {
+        "tags": [
+          "MusicInfoMaintainer"
+        ],
+        "operationId": "MusicInfoMaintainer_AddSong",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "songRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SongRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MaintainMusicInfoResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/MusicInfoMaintainer/DeleteSong": {
+      "post": {
+        "tags": [
+          "MusicInfoMaintainer"
+        ],
+        "operationId": "MusicInfoMaintainer_DeleteSong",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "songPk",
+            "in": "query",
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MaintainMusicInfoResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/MusicInfoMaintainer/UpdateSong": {
+      "post": {
+        "tags": [
+          "MusicInfoMaintainer"
+        ],
+        "operationId": "MusicInfoMaintainer_UpdateSong",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "song",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SongRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MaintainMusicInfoResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/MusicInfoMaintainer/SaveSongIndex": {
+      "get": {
+        "tags": [
+          "MusicInfoMaintainer"
+        ],
+        "operationId": "MusicInfoMaintainer_SaveSongIndex",
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MaintainMusicInfoResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/api/v1/MusicInfoMaintainer/RebuildAllIndex": {
+      "get": {
+        "tags": [
+          "MusicInfoMaintainer"
+        ],
+        "operationId": "MusicInfoMaintainer_RebuildAllIndex",
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MaintainMusicInfoResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SingleSearchResult": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResultBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "songInfos": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SongDocument"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SongDocument": {
+      "type": "object",
+      "required": [
+        "songSeconds",
+        "score"
+      ],
+      "properties": {
+        "singerNames": {
+          "type": "string"
+        },
+        "singerAKANames": {
+          "type": "string"
+        },
+        "songTitle": {
+          "type": "string"
+        },
+        "songAKATitles": {
+          "type": "string"
+        },
+        "album": {
+          "type": "string"
+        },
+        "genres": {
+          "type": "string"
+        },
+        "songSeconds": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "songPk": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number",
+          "format": "float"
+        },
+        "releaseDate": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string",
+          "format": "byte"
+        },
+        "singerDescription": {
+          "type": "string"
+        },
+        "albumDescription": {
+          "type": "string"
+        }
+      }
+    },
+    "ResultBase": {
+      "type": "object",
+      "required": [
+        "resultCode"
+      ],
+      "properties": {
+        "resultCode": {
+          "$ref": "#/definitions/ResultCode"
+        },
+        "extraMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "ResultCode": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Successful",
+        "Failed",
+        "Exception"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "BatchSearchResult": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResultBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "searchResults": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BatchSearchResultItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BatchSearchResultItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResultBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "searchRequestItem": {
+              "$ref": "#/definitions/SearchRequestItem"
+            },
+            "songInfos": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SongDocument"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SearchRequestItem": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "album": {
+          "type": "string"
+        },
+        "singers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customSearchQuery": {
+          "type": "string"
+        }
+      }
+    },
+    "BatchSearchRequest": {
+      "type": "object",
+      "properties": {
+        "searchRequestItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchRequestItem"
+          }
+        }
+      }
+    },
+    "MaintainMusicInfoResult": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResultBase"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "SongRequest": {
+      "type": "object",
+      "required": [
+        "songPk",
+        "albumPk",
+        "seconds"
+      ],
+      "properties": {
+        "songPk": {
+          "type": "string",
+          "format": "guid"
+        },
+        "singerPks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "guid"
+          }
+        },
+        "genrePks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "guid"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "akaTitles": {
+          "type": "string"
+        },
+        "albumPk": {
+          "type": "string",
+          "format": "guid"
+        },
+        "picture": {
+          "type": "string",
+          "format": "byte"
+        },
+        "seconds": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "singers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "album": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

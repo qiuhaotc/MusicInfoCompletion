@@ -2,7 +2,7 @@
 
 namespace MusicInfoCompletion.Common
 {
-    public class SearchResult : ResultBase
+    public class SingleSearchResult : ResultBase
     {
         public IEnumerable<SongDocument> SongInfos { get; set; }
     }

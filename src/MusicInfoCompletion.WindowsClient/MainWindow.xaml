@@ -1,14 +1,12 @@
-﻿<reactiveui:ReactiveWindow  x:Class="MusicInfoCompletion.WindowsClient.MainWindow"
+﻿<Window x:Class="MusicInfoCompletion.WindowsClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        x:TypeArguments="local:MainViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:reactiveui="http://reactiveui.net"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicInfoCompletion.WindowsClient"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <local:MusicFiles Grid.Row="1" x:Name="MainContent"/>
+        <local:MusicFiles x:Name="MainContent" DataContext="{Binding MusicFilesViewModel}"/>
     </Grid>
-</reactiveui:ReactiveWindow>
+</Window>

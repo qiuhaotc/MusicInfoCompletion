@@ -25,9 +25,9 @@ namespace MusicInfoCompletion.Test
             {
                 Assert.AreEqual("4", document.Album);
                 Assert.AreEqual("2", document.AlbumDescription);
-                Assert.AreEqual("1 | 2", document.Genre);
+                Assert.AreEqual("1 | 2", document.Genres);
                 Assert.AreEqual(song.Picture, document.Picture);
-                Assert.AreEqual(song.Album.ReleaseDate.Value.ToString(Constants.DateTimeFormat), document.ReleaseDate);
+                Assert.AreEqual(song.Album.ReleaseDate.Value.ToString(Common.Constants.DateTimeFormat), document.ReleaseDate);
                 Assert.AreEqual(0f, document.Score);
                 Assert.AreEqual("1 | 4 | 5", document.SingerAKANames);
                 Assert.AreEqual("2 | 6", document.SingerDescription);
@@ -51,9 +51,9 @@ namespace MusicInfoCompletion.Test
                 Assert.AreEqual(song.Pk.ToString(), document.Get(nameof(SongDocument.SongPk)));
                 Assert.AreEqual("4", document.Get(nameof(SongDocument.Album)));
                 Assert.AreEqual("2", document.Get(nameof(SongDocument.AlbumDescription)));
-                Assert.AreEqual("1 | 2", document.Get(nameof(SongDocument.Genre)));
+                Assert.AreEqual("1 | 2", document.Get(nameof(SongDocument.Genres)));
                 Assert.AreEqual(song.Picture, document.GetBinaryValue(nameof(SongDocument.Picture)).Bytes);
-                Assert.AreEqual(song.Album.ReleaseDate.Value.ToString(Constants.DateTimeFormat), document.Get(nameof(SongDocument.ReleaseDate)));
+                Assert.AreEqual(song.Album.ReleaseDate.Value.ToString(Common.Constants.DateTimeFormat), document.Get(nameof(SongDocument.ReleaseDate)));
                 Assert.AreEqual("1 | 4 | 5", document.Get(nameof(SongDocument.SingerAKANames)));
                 Assert.AreEqual("2 | 6", document.Get(nameof(SongDocument.SingerDescription)));
                 Assert.AreEqual("3 | 7", document.Get(nameof(SongDocument.SingerNames)));
