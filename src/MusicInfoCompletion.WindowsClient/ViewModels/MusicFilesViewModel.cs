@@ -74,6 +74,12 @@ namespace MusicInfoCompletion.WindowsClient
                         var files = Directory.GetFiles(MusicPath, "*", SearchOption.AllDirectories);
                         return await Task.FromResult(files.Select(u => new FileInfo(u)).Where(u => musicExtension.Contains(u.Extension.ToLower())).Select(u => new MusicFileViewModel(u)).ToArray());
                     }
+                    catch(Exception ex)
+                    {
+                        LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(GetMusicFiles));
+
+                        return Array.Empty<MusicFileViewModel>();
+                    }
                     finally
                     {
                         IsLoading = false;
@@ -89,6 +95,8 @@ namespace MusicInfoCompletion.WindowsClient
 
         async Task SearchMusicInfo(CancellationToken token)
         {
+            WPFLogTarget.ClearLog?.Invoke();
+
             var client = new MusicServiceClient(new System.Net.Http.HttpClient())
             {
                 BaseUrl = SearchEndPoint
@@ -96,9 +104,9 @@ namespace MusicInfoCompletion.WindowsClient
 
             IsLoading = true;
 
-            foreach(var item in MusicFiles)
+            foreach (var item in MusicFiles)
             {
-                item.SearchResults = string.Empty;
+                item.SongInfos = Array.Empty<SongDocument>();
             }
 
             foreach (var request in GetBatchSearchRequests())
@@ -114,18 +122,23 @@ namespace MusicInfoCompletion.WindowsClient
                             var file = MusicFiles.FirstOrDefault(u => u.Path == item?.SearchRequestItem.Path);
                             if (file != null)
                             {
-                                file.SearchResults = string.Join(Constants.Separater, item.SongInfos);
+                                file.SongInfos = item.SongInfos;
+                                LoggerHelper.Logger.Info("Find song info for {file}, info {songInfo}", file.Path, file.SearchResults);
                             }
                             else
                             {
-                                file.SearchResults = string.Empty;
+                                file.SongInfos = Array.Empty<SongDocument>();
                             }
                         }
+                    }
+                    else
+                    {
+                        LoggerHelper.Logger.Warn("Failed to ApiV1MusicGetsonginfosAsync: {message}", result.ExtraMessage);
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.Message);
+                    LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(SearchMusicInfo));
                 }
             }
 
@@ -138,7 +151,7 @@ namespace MusicInfoCompletion.WindowsClient
             var shouldContinue = true;
             while (shouldContinue)
             {
-                var items = MusicFiles.Skip(batch * Constants.MaxRequestForOneBatch).Take(Constants.MaxRequestForOneBatch).Select(u => new SearchRequestItem { Album = u.Album, Genres = u.TagInfo.Tag.Genres, Singers = u.TagInfo.Tag.Performers, Title = u.Title, Path = u.Path }).ToArray();
+                var items = MusicFiles.Skip(batch * Constants.MaxRequestForOneBatch).Take(Constants.MaxRequestForOneBatch).Select(u => new SearchRequestItem { Album = u.Album, Genres = u.TagInfo.Tag.Genres, Singers = u.TagInfo.Tag.Performers, Title = string.IsNullOrWhiteSpace(u.Title) ? u.FileInfo.Name : u.Title, Path = u.Path }).ToArray();
 
                 if (items.Length > 0)
                 {

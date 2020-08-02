@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicInfoCompletion.WindowsClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Music Info Completion" Height="600" Width="1200">
     <Grid>
         <local:MusicFiles x:Name="MainContent" DataContext="{Binding MusicFilesViewModel}"/>
     </Grid>

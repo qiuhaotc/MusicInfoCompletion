@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MusicInfoCompletion.WindowsClient
 {
@@ -21,6 +12,27 @@ namespace MusicInfoCompletion.WindowsClient
         public MusicFiles()
         {
             InitializeComponent();
+
+            WPFLogTarget.LogMessage = log => LogMessage(log);
+            WPFLogTarget.ClearLog = () => ClearMessage();
+        }
+
+        void ClearMessage()
+        {
+            OutputLogs.Text = string.Empty;
+        }
+
+        async void LogMessage(string log)
+        {
+            await Task.Run(() => {
+                OutputLogs.Dispatcher.Invoke(() => {
+                    OutputLogs.Text += log + Environment.NewLine;
+                    if (Scroller.VerticalOffset == Scroller.ScrollableHeight)
+                    {
+                        Scroller.ScrollToEnd();
+                    }
+                });
+            });
         }
     }
 }

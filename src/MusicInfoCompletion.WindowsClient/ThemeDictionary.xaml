@@ -55,4 +55,27 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="Button" x:Key="SearchButton" BasedOn="{StaticResource NormalButton}">
+        <Style.Triggers>
+            <Trigger Property="pu:ButtonHelper.ButtonStyle" Value="Hollow">
+                <Setter Property="BorderBrush" Value="#25AA00"/>
+                <Setter Property="Foreground" Value="#25AA00"/>
+                <Setter Property="pu:ButtonHelper.HoverBrush" Value="#27B600"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LogScrollViewer" TargetType="ScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Background" Value="#FF000128"/>
+        <Setter Property="Margin" Value="4"/>
+        <Style.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="FontFamily" Value="Consolas"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+        </Style.Resources>
+    </Style>
 </ResourceDictionary>

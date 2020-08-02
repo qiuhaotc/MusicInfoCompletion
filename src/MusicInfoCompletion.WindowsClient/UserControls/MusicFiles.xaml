@@ -12,11 +12,13 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="180"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="132"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Music Path:" Grid.Column="0"/>
@@ -26,13 +28,13 @@
         <DockPanel Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="132"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="180"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Search Endpoint:" Grid.Column="0"/>
                 <TextBox Name="SearchEndpoint" Grid.Column="1" Text="{Binding SearchEndPoint}"/>
-                <Button x:Name="SearchButton"  Grid.Column="2" Command="{Binding SearchResults}" Content="Search"/>
+                <Button x:Name="SearchButton"  Grid.Column="2" Command="{Binding SearchResults}" Style="{StaticResource SearchButton}" Content="Search"/>
             </Grid>
         </DockPanel>
         <DataGrid x:Name="MusicFilesList" Grid.Row="2" AutoGenerateColumns="False" ItemsSource="{Binding MusicFiles}">
@@ -44,7 +46,7 @@
                 <DataGridTextColumn IsReadOnly="True" Header="Genres" Binding="{Binding Genres}"/>
                 <DataGridTemplateColumn IsReadOnly="True" MaxWidth="300">
                     <DataGridTemplateColumn.Header>
-                        <Label Content="Search Results"/>
+                        <Label Content="Match Results"/>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -54,8 +56,24 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <Label Content="Save First Match To File"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding SaveResultToFileCommand}" Style="{StaticResource RunButton}" Content="Save"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <pu:Loading Grid.Row="2" Name="LoadingIcon" IsLoading="{Binding IsLoading}"/>
+        <GridSplitter Grid.Row="3"  HorizontalAlignment="Stretch"></GridSplitter>
+        <DockPanel Grid.Row="4" Name="LogsPanel">
+            <ScrollViewer Name="Scroller" Style="{StaticResource LogScrollViewer}">
+                <TextBlock Name="OutputLogs"/>
+            </ScrollViewer>
+        </DockPanel>
     </Grid>
 </UserControl>

@@ -9,6 +9,7 @@ namespace MusicInfoCompletion.WindowsClient
     {
         public App()
         {
+            NLog.LogManager.LoadConfiguration("nlog.WindowsClient.config");
         }
     }
 }
