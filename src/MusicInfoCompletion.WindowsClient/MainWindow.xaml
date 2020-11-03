@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicInfoCompletion.WindowsClient"
         mc:Ignorable="d"
+        xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         Title="Music Info Completion" Height="600" Width="1200">
     <Grid>
-        <local:MusicFiles x:Name="MainContent" DataContext="{Binding MusicFilesViewModel}"/>
+        <TabControl pu:TabControlHelper.TabControlStyle="Standard">
+            <TabItem Header="Use web service">
+                <local:MusicFiles x:Name="MainContent" DataContext="{Binding MusicFilesViewModel}"/>
+            </TabItem>
+            <TabItem Header="Use File Name">
+                <local:FixByFileNames x:Name="FixByFileNames" DataContext="{Binding FixByFileNamesViewModel}"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
