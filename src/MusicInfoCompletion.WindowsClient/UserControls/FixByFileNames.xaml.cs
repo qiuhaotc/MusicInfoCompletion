@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,6 +22,32 @@ namespace MusicInfoCompletion.WindowsClient
         public FixByFileNames()
         {
             InitializeComponent();
+
+            WPFLogTarget.LogMessageToPage2 = log => LogMessage(log);
+            WPFLogTarget.ClearLogForPage2 = () => ClearMessage();
+        }
+
+        void ClearMessage()
+        {
+            OutputLogs.Text = string.Empty;
+        }
+
+        async void LogMessage(string log)
+        {
+            await Task.Run(() => {
+                OutputLogs.Dispatcher.Invoke(() => {
+                    OutputLogs.Text += log + Environment.NewLine;
+                    if (Scroller.VerticalOffset == Scroller.ScrollableHeight)
+                    {
+                        Scroller.ScrollToEnd();
+                    }
+                });
+            });
+        }
+
+        void ClearLogs_Click(object sender, RoutedEventArgs e)
+        {
+            WPFLogTarget.ClearLogForPage2?.Invoke();
         }
     }
 }

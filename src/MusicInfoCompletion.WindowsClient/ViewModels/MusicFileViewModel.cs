@@ -27,10 +27,10 @@ namespace MusicInfoCompletion.WindowsClient
         public string Album => TagInfo.Tag.Album;
         public string Genres => string.Join(", ", TagInfo.Tag.Genres);
         public string Singers => string.Join(", ", TagInfo.Tag.Performers);
-        public IEnumerable<SongDocument> SongInfos 
+        public IEnumerable<SongDocument> SongInfos
         {
-            get => songInfos; 
-            set 
+            get => songInfos;
+            set
             {
                 songInfos = value; NotifyPropertyChange(nameof(SearchResults));
                 SelectedSongInfo = null;
@@ -73,7 +73,7 @@ namespace MusicInfoCompletion.WindowsClient
                     NotifyPropertyChange(nameof(Genres));
                     NotifyPropertyChange(nameof(Singers));
 
-                    LoggerHelper.Logger.Info("Save search results tag {Tag} to file {path}", SelectedSongInfo.SongTitle, FileInfo.FullName);
+                    LoggerHelper.Logger.Info("Save search results tag to file {path}", FileInfo.FullName);
                 }
                 catch (Exception ex)
                 {

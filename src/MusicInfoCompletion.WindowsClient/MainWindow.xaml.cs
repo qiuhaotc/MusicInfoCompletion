@@ -25,5 +25,17 @@ namespace MusicInfoCompletion.WindowsClient
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if((sender as TabControl).SelectedItem.Equals(Page1))
+            {
+                WPFLogTarget.OnPage1 = true;
+            }
+            else
+            {
+                WPFLogTarget.OnPage1 = false;
+            }
+        }
     }
 }

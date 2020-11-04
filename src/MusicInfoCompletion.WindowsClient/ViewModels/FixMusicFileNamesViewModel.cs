@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MusicInfoCompletion.Common;
 using ReactiveUI;
 
 namespace MusicInfoCompletion.WindowsClient
@@ -25,8 +27,6 @@ namespace MusicInfoCompletion.WindowsClient
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(DoGetFiles);
 
-            FileNameFormatHint = $"like: {Title} {Singer} {Album}";
-
             SaveResults = new CommandHandler(SaveResultToFile, () => !IsSaving);
         }
 
@@ -44,57 +44,168 @@ namespace MusicInfoCompletion.WindowsClient
                 return;
             }
 
+            if (string.IsNullOrEmpty(SingerNameSpliter))
+            {
+                LoggerHelper.Logger.Info(nameof(SingerNameSpliter) + " should not be null or empty");
+                return;
+            }
+
             IsSaving = true;
 
-            foreach (var music in MusicFiles)
+            try
             {
-                try
-                {
-                    var fileName = music.FileInfo.Name.Remove(music.FileInfo.Name.LastIndexOf("."));
-                    fileName.Split("-");
+                var formarts = FileNameFormat.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                var parts = GetParts(formarts);
 
-                    // TODO: Finish
-                }
-                catch (Exception ex)
+                foreach (var music in MusicFiles)
                 {
-                    LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(SaveResultToFile));
+                    try
+                    {
+                        var fileName = music.FileInfo.Name.Remove(music.FileInfo.Name.LastIndexOf("."));
+                        var nameParts = fileName.Split(FileNameSpliter, StringSplitOptions.RemoveEmptyEntries).Where(u => !string.IsNullOrWhiteSpace(u)).Select(u => u.Trim()).ToArray();
+                        if (parts.Count == nameParts.Length)
+                        {
+                            music.SelectedSongInfo = new SongDocument();
+
+                            for (int i = 0; i < nameParts.Length; i++)
+                            {
+                                switch (parts[i])
+                                {
+                                    case Part.Title:
+                                        if (OverrideRawValue || string.IsNullOrWhiteSpace(music.TagInfo.Tag.Title))
+                                        {
+                                            music.SelectedSongInfo.SongTitle = nameParts[i];
+                                        }
+                                        break;
+                                    case Part.Singer:
+                                        if (OverrideRawValue || music.TagInfo.Tag.Performers.Length == 0)
+                                        {
+
+                                            music.SelectedSongInfo.SingerNames = string.Join(
+                                                Constants.Separater,
+                                                nameParts[i]
+                                                .Split(SingerNameSpliter, StringSplitOptions.RemoveEmptyEntries)
+                                                .Where(u => !string.IsNullOrEmpty(u)));
+                                        }
+                                        break;
+                                    case Part.Album:
+                                        if (OverrideRawValue || string.IsNullOrWhiteSpace(music.TagInfo.Tag.Album))
+                                        {
+                                            music.SelectedSongInfo.Album = nameParts[i];
+                                        }
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                            }
+
+                            music.SaveResultToFileCommand.Execute(null);
+                        }
+                        else
+                        {
+                            LoggerHelper.Logger.Warn("Skip file {File} due to not meet the formats", music.FileInfo.Name);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(SaveResultToFile));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(SaveResultToFile));
             }
 
             IsSaving = false;
         }
 
-        const string Title = "{title}";
-        const string Singer = "{singer}";
-        const string Album = "{album}";
+        List<Part> GetParts(string[] formarts)
+        {
+            var parts = new List<Part>();
+
+            foreach (var format in formarts)
+            {
+                switch (format)
+                {
+                    case Title:
+                        parts.Add(Part.Title);
+                        break;
+                    case Singer:
+                        parts.Add(Part.Singer);
+                        break;
+                    case Album:
+                        parts.Add(Part.Album);
+                        break;
+                    default:
+                        throw new ArgumentException("Wrong format {Format}", format);
+                }
+            }
+
+            return parts;
+        }
+
+        const string Title = "title";
+        const string Singer = "singer";
+        const string Album = "album";
+
+        enum Part
+        {
+            Title,
+            Singer,
+            Album
+        }
 
         static string[] musicExtension = new[] { ".mp3", ".aac", ".flac", ".ape", ".wav" };
 
-        public string FileNameFormatHint { get; set; }
+        public string FileNameFormatHint { get; set; } = $"like: {Title} {Singer} {Album}";
 
         public bool IsSaving { get; set; }
 
-        public string FileNameFormat { get; set; }
-        public string FileNameSpliter { get; set; }
+        public string FileNameFormat { get; set; } = "title singer";
+        public string FileNameSpliter { get; set; } = "-";
         public string FileNameSpliterHint { get; set; } = "like: - or :";
+        public string SingerNameSpliter { get; set; } = "、";
 
         public ICommand SaveResults { get; set; }
+
+        public bool OverrideRawValue { get; set; }
 
         public ObservableCollection<MusicFileViewModel> MusicFiles { get; set; } = new ObservableCollection<MusicFileViewModel>();
 
         async Task GetMusicFiles(CancellationToken token)
         {
-            MusicFiles.Clear();
+            IsLoading = true;
 
-            var models = await Task.Run(() =>
+            try
             {
-                var files = Directory.GetFiles(MusicPath, "*", SearchOption.AllDirectories);
-                return files.Select(u => new FileInfo(u)).Where(u => musicExtension.Contains(u.Extension.ToLower())).Select(u => new MusicFileViewModel(u)).ToArray();
-            }, token);
+                MusicFiles.Clear();
 
-            foreach (var model in models)
+                var models = await Task.Run(() =>
+                {
+                    var tempMusicPath = MusicPath;
+
+                    if (!Directory.Exists(tempMusicPath))
+                    {
+                        return Array.Empty<MusicFileViewModel>();
+                    }
+
+                    var files = Directory.GetFiles(tempMusicPath, "*", SearchOption.AllDirectories);
+                    return files.Select(u => new FileInfo(u)).Where(u => musicExtension.Contains(u.Extension.ToLower())).Select(u => new MusicFileViewModel(u)).ToArray();
+                }, token);
+
+                foreach (var model in models)
+                {
+                    MusicFiles.Add(model);
+                }
+            }
+            catch (Exception ex)
             {
-                MusicFiles.Add(model);
+                LoggerHelper.Logger.Error(ex, "Error occur in {method}", nameof(GetMusicFiles));
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

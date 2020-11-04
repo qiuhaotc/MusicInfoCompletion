@@ -29,6 +29,10 @@
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Height" Value="30"/>
             </Style>
+            <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
             <Style TargetType="Image">
                 <Setter Property="Margin" Value="4"/>
             </Style>

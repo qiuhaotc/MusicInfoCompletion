@@ -10,12 +10,25 @@ namespace MusicInfoCompletion.WindowsClient
     {
         protected override void Write(LogEventInfo logEvent)
         {
-            LogMessage?.Invoke(Layout.Render(logEvent));
+            if (OnPage1)
+            {
+                LogMessageToPage1?.Invoke(Layout.Render(logEvent));
+            }
+            else
+            {
+                LogMessageToPage2?.Invoke(Layout.Render(logEvent));
+            }
         }
 
-        public static Action<string> LogMessage { get; set; }
+        public static bool OnPage1 { get; set; } = true;
 
-        public static Action ClearLog { get; set; }
+        public static Action<string> LogMessageToPage1 { get; set; }
+
+        public static Action<string> LogMessageToPage2 { get; set; }
+
+        public static Action ClearLogForPage1 { get; set; }
+
+        public static Action ClearLogForPage2 { get; set; }
     }
 
     public static class LoggerHelper

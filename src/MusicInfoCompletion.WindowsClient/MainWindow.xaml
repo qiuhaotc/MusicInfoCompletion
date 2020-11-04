@@ -8,11 +8,11 @@
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         Title="Music Info Completion" Height="600" Width="1200">
     <Grid>
-        <TabControl pu:TabControlHelper.TabControlStyle="Standard">
-            <TabItem Header="Use web service">
+        <TabControl pu:TabControlHelper.TabControlStyle="Standard" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="Use web service" Name="Page1">
                 <local:MusicFiles x:Name="MainContent" DataContext="{Binding MusicFilesViewModel}"/>
             </TabItem>
-            <TabItem Header="Use File Name">
+            <TabItem Header="Use File Name" Name="Page2">
                 <local:FixByFileNames x:Name="FixByFileNames" DataContext="{Binding FixByFileNamesViewModel}"/>
             </TabItem>
         </TabControl>

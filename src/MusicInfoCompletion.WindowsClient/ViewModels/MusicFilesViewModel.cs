@@ -95,7 +95,7 @@ namespace MusicInfoCompletion.WindowsClient
 
         async Task SearchMusicInfo(CancellationToken token)
         {
-            WPFLogTarget.ClearLog?.Invoke();
+            WPFLogTarget.ClearLogForPage1?.Invoke();
 
             var client = new MusicServiceClient(new System.Net.Http.HttpClient())
             {

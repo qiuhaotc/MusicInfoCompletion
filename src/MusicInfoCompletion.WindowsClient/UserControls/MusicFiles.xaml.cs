@@ -13,8 +13,8 @@ namespace MusicInfoCompletion.WindowsClient
         {
             InitializeComponent();
 
-            WPFLogTarget.LogMessage = log => LogMessage(log);
-            WPFLogTarget.ClearLog = () => ClearMessage();
+            WPFLogTarget.LogMessageToPage1 = log => LogMessage(log);
+            WPFLogTarget.ClearLogForPage1 = () => ClearMessage();
         }
 
         void ClearMessage()
