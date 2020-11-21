@@ -15,10 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.Test", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{A32444D3-5484-49D0-9CD5-C4BD049279F1}"
 	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicInfoCompletion.WindowsClient", "MusicInfoCompletion.WindowsClient\MusicInfoCompletion.WindowsClient.csproj", "{FA84A305-F92E-47CE-8504-21BE41F58CDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicInfoCompletion.WindowsClient", "MusicInfoCompletion.WindowsClient\MusicInfoCompletion.WindowsClient.csproj", "{FA84A305-F92E-47CE-8504-21BE41F58CDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

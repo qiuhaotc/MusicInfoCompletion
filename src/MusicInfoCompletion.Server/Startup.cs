@@ -72,7 +72,7 @@ namespace MusicInfoCompletion.Server
 
             services.AddDbContextPool<MusicDbContext>(option =>
             {
-                option.UseMySql(Configuration.GetConnectionString("MusicConnection"));
+                option.UseMySql(Configuration.GetConnectionString("MusicConnection"), new MySqlServerVersion(musicConfiguration.SqlVersion));
             });
 
             services.AddSingleton<IndexMaintainer>();
@@ -80,7 +80,6 @@ namespace MusicInfoCompletion.Server
             var authentication = new AuthenticationInfo();
             Configuration.Bind("AuthenticationInfo", authentication);
             services.AddSingleton(authentication);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
