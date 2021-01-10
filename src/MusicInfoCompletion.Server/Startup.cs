@@ -72,7 +72,7 @@ namespace MusicInfoCompletion.Server
 
             services.AddDbContextPool<MusicDbContext>(option =>
             {
-                option.UseMySql(Configuration.GetConnectionString("MusicConnection"), new MySqlServerVersion(musicConfiguration.SqlVersion));
+                option.UseMySql(Configuration.GetConnectionString("MusicConnection"), new MySqlServerVersion(new Version(musicConfiguration.SqlVersion)));
             });
 
             services.AddSingleton<IndexMaintainer>();
